@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 import mitt from 'mitt'
 import * as cheerio from 'cheerio'
@@ -21,10 +22,10 @@ const requester = axios.create({
 function createRecorder(opts: RecorderCreateOpts): Recorder {
   const checkLiveStatusAndRecord = singleton<
     Recorder['checkLiveStatusAndRecord']
-  >(async function ({ saveFolder, saveName }) {
+  >(async function ({ getSavePath }) {
     if (this.recordHandle != null) return this.recordHandle
 
-    const { living } = await getInfo(this.channelId)
+    const { living, owner, title } = await getInfo(this.channelId)
     if (!living) return null
 
     this.state = 'recording'
@@ -46,7 +47,12 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
 
     // TODO: 弹幕录制
 
-    const savePath = path.join(saveFolder, saveName + '.flv')
+    const savePath = getSavePath({ owner, title }) + '.flv'
+    const saveFolder = path.dirname(savePath)
+    if (!fs.existsSync(saveFolder)) {
+      fs.mkdirSync(saveFolder, { recursive: true })
+    }
+
     const callback = (...args: unknown[]) => {
       console.log('cb', ...args)
     }
@@ -112,7 +118,9 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     availableSources: [],
     state: 'idle',
 
-    getChannelURL: () => `https://www.douyu.com/${this.channelId}`,
+    getChannelURL() {
+      return `https://www.douyu.com/${this.channelId}`
+    },
     checkLiveStatusAndRecord,
 
     toJSON() {

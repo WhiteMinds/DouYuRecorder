@@ -2,14 +2,16 @@
 # yarn lockfile v1
 
 
-"@autorecord/manager@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.5.tgz#6be09861377f2ba6f93381128b3d62de797773b7"
-  integrity sha512-o3Es4vZb/0wPSkO9SC0O0yqGqkcIzAEsGryVsZGxildTmblQSZPm4XbaoAGUh18CLxlIxTX7+F+3y5IGTIbl/A==
+"@autorecord/manager@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.6.tgz#ce3a1876d1e1df88c1d11e3fbe2a8a17158a629c"
+  integrity sha512-0CznHP3slIbMibRVlr82ujKKMJ0HShtiZbiY6nDH03HTH7w+4jB3wlH+KvKFBZ4bmmY8ykx0/cVxbVr1V6OlqQ==
   dependencies:
     ffmpeg-static "^5.0.2"
     fluent-ffmpeg "^2.1.2"
     mitt "^3.0.0"
+    ramda "^0.28.0"
+    string-template "^1.0.0"
 
 "@derhuerst/http-basic@^8.2.0":
   version "8.2.4"
@@ -214,9 +216,9 @@ env-paths@^2.2.0:
   integrity sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==
 
 ffmpeg-static@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/ffmpeg-static/-/ffmpeg-static-5.0.2.tgz#7e5bae2bf78728b79b85c43979a14e2a8458cf72"
-  integrity sha512-rYeA04AGbvxbUxov6Cn/KDKIzw2rmzwPlgHoqn837NZt0xPdOVA9mJMILz9IX27R45hhSlXS6nThk85XxDivLg==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/ffmpeg-static/-/ffmpeg-static-5.1.0.tgz#133500f4566570c5a0e96795152b0526d8c936ad"
+  integrity sha512-eEWOiGdbf7HKPeJI5PoJ0oCwkL0hckL2JdS4JOuB/gUETppwkEpq8nF0+e6VEQnDCo/iuoipbTUsn9QJmtpNkg==
   dependencies:
     "@derhuerst/http-basic" "^8.2.0"
     env-paths "^2.2.0"
@@ -377,6 +379,11 @@ strict-uri-encode@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
   integrity sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==
+
+string-template@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/string-template/-/string-template-1.0.0.tgz#9e9f2233dc00f218718ec379a28a5673ecca8b96"
+  integrity sha512-SLqR3GBUXuoPP5MmYtD7ompvXiG87QjT6lzOszyXjTM86Uu7At7vNnt2xgyTLq5o9T4IxTYFyGxcULqpsmsfdg==
 
 string_decoder@^1.1.1:
   version "1.3.0"

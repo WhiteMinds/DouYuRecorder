@@ -9,7 +9,12 @@ const requester = axios.create({
   timeout: 10e3,
 })
 
-export async function getInfo(channelId: string) {
+export async function getInfo(channelId: string): Promise<{
+  living: boolean
+  owner: string
+  title: string
+  startTime: Date
+}> {
   const res = await requester.get<any>(
     `http://open.douyucdn.cn/api/RoomApi/room/${channelId}`
   )
