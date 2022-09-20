@@ -10,6 +10,7 @@ import {
   RecordHandle,
   defaultFromJSON,
   defaultToJSON,
+  genRecorderUUID,
 } from '@autorecord/manager'
 import { getInfo, getStream } from './stream'
 import axios from 'axios'
@@ -111,6 +112,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
   })
 
   const recorder: Recorder = {
+    id: genRecorderUUID(),
     ...mitt(),
     ...opts,
 

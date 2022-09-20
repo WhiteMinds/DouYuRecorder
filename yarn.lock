@@ -2,16 +2,17 @@
 # yarn lockfile v1
 
 
-"@autorecord/manager@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.6.tgz#ce3a1876d1e1df88c1d11e3fbe2a8a17158a629c"
-  integrity sha512-0CznHP3slIbMibRVlr82ujKKMJ0HShtiZbiY6nDH03HTH7w+4jB3wlH+KvKFBZ4bmmY8ykx0/cVxbVr1V6OlqQ==
+"@autorecord/manager@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.7.tgz#ce281484c2d3d899012c2ed5cd6cda593248af83"
+  integrity sha512-AkzGgefE6zIiKNbNwdmc2C4vOqS3DjW+bGgMK12jJB/7HIG7oCSgDh/KvuBedbJt6muqusXUj49Gmlkxphz2dw==
   dependencies:
     ffmpeg-static "^5.0.2"
     fluent-ffmpeg "^2.1.2"
     mitt "^3.0.0"
     ramda "^0.28.0"
     string-template "^1.0.0"
+    uuid "^9.0.0"
 
 "@derhuerst/http-basic@^8.2.0":
   version "8.2.4"
@@ -411,6 +412,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 vm2@^3.9.10:
   version "3.9.10"
