@@ -164,7 +164,9 @@ export const provider: RecorderProvider = {
     }
   },
 
-  createRecorder,
+  createRecorder(opts) {
+    return createRecorder({ providerId: provider.id, ...opts })
+  },
 
   fromJSON(recorder) {
     return defaultFromJSON(this, recorder)

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@autorecord/manager@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.7.tgz#ce281484c2d3d899012c2ed5cd6cda593248af83"
-  integrity sha512-AkzGgefE6zIiKNbNwdmc2C4vOqS3DjW+bGgMK12jJB/7HIG7oCSgDh/KvuBedbJt6muqusXUj49Gmlkxphz2dw==
+"@autorecord/manager@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.9.tgz#7797c0fda3d9330ccd8b35f51bf151d6d39d12e3"
+  integrity sha512-emZdfoytoYT69aDUAUB/1h4C4qEZZBA7FEfYV5fRHjtEOv76Ak4GIiLBh0Stc1Fg7ulnVZQcNDgG76CeM4oQMw==
   dependencies:
     ffmpeg-static "^5.0.2"
     fluent-ffmpeg "^2.1.2"

@@ -5,7 +5,8 @@ import { provider } from '.'
 
 const manager = createRecorderManager()
 manager.loadRecorderProvider(provider)
-manager.addRecorder(provider.id, {
+manager.addRecorder({
+  providerId: provider.id,
   channelId: '74751',
   quality: 'highest',
   streamPriorities: [],
