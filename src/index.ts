@@ -97,6 +97,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
       // TODO: other codes
       // TODO: emit update event
 
+      this.recordHandle = undefined
       this.state = 'idle'
     })
 
@@ -112,7 +113,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
   })
 
   const recorder: Recorder = {
-    id: genRecorderUUID(),
+    id: opts.id ?? genRecorderUUID(),
     ...mitt(),
     ...opts,
 
