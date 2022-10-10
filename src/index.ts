@@ -11,6 +11,7 @@ import {
   defaultFromJSON,
   defaultToJSON,
   genRecorderUUID,
+  genRecordUUID,
 } from '@autorecord/manager'
 import { getInfo, getStream } from './stream'
 import axios from 'axios'
@@ -87,6 +88,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     command.run()
 
     const stop = singleton<RecordHandle['stop']>(async () => {
+      if (!this.recordHandle) return
       this.state = 'stopping-record'
       // TODO: emit update event
 
@@ -97,17 +99,20 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
       // TODO: other codes
       // TODO: emit update event
 
+      this.emit('RecordStop', this.recordHandle)
       this.recordHandle = undefined
       this.state = 'idle'
     })
 
     this.recordHandle = {
+      id: genRecordUUID(),
       stream: stream.name,
       source: stream.source,
       url: stream.url,
       savePath,
       stop,
     }
+    this.emit('RecordStart', this.recordHandle)
 
     return this.recordHandle
   })
