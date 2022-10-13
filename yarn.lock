@@ -2,11 +2,12 @@
 # yarn lockfile v1
 
 
-"@autorecord/manager@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.13.tgz#e5c6aa342efebb6700458569904720c13728f14d"
-  integrity sha512-Zy0+tyasAi6RrppdDgbgg3KwzUeH6f2xbO3wqtsJ+VJL4l3aDj4ByFhjL+f3mHJsisteZiT8/4BkZJ69V3ymxQ==
+"@autorecord/manager@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.14.tgz#c6954c26d44f59521c41a0aec6f237fc977cab5d"
+  integrity sha512-rKX8hvCMRRotIjazGzezUcg2tEizIP5Z5oOgMVLSz87YkYS1f5VrUpNJRCkseGoW3lBaNvoB4nWXid8XgGkCjA==
   dependencies:
+    "@types/fluent-ffmpeg" "^2.1.20"
     ffmpeg-static "^5.0.2"
     fluent-ffmpeg "^2.1.2"
     mitt "^3.0.0"
@@ -28,6 +29,18 @@
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-4.1.1.tgz#602859584cecc91894eb23a4892f38cfa927890d"
   integrity sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==
+
+"@types/fluent-ffmpeg@^2.1.20":
+  version "2.1.20"
+  resolved "https://registry.yarnpkg.com/@types/fluent-ffmpeg/-/fluent-ffmpeg-2.1.20.tgz#3b5f42fc8263761d58284fa46ee6759a64ce54ac"
+  integrity sha512-B+OvhCdJ3LgEq2PhvWNOiB/EfwnXLElfMCgc4Z1K5zXgSfo9I6uGKwR/lqmNPFQuebNnes7re3gqkV77SyypLg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/node@*":
+  version "18.8.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.8.5.tgz#6a31f820c1077c3f8ce44f9e203e68a176e8f59e"
+  integrity sha512-Bq7G3AErwe5A/Zki5fdD3O6+0zDChhg671NfPjtIcbtzDNZTv4NPKMRFr7gtYPG7y+B8uTiNK4Ngd9T0FTar6Q==
 
 "@types/node@^10.0.3":
   version "10.17.60"
