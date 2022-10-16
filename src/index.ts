@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import mitt from 'mitt'
 import * as cheerio from 'cheerio'
 import {
@@ -12,10 +10,15 @@ import {
   defaultToJSON,
   genRecorderUUID,
   genRecordUUID,
+  createRecordExtraDataController,
+  Comment,
+  GiveGift,
 } from '@autorecord/manager'
 import { getInfo, getStream } from './stream'
 import axios from 'axios'
-import { singleton } from './utils'
+import { ensureFolderExist, singleton } from './utils'
+import { createDYClient } from './dy_client'
+import { giftMap } from './gift_map'
 
 const requester = axios.create({
   timeout: 10e3,
@@ -47,13 +50,67 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     this.usedSource = stream.source
     // TODO: emit update event
 
-    // TODO: 弹幕录制
+    const savePath = getSavePath({ owner, title })
 
-    const savePath = getSavePath({ owner, title }) + '.flv'
-    const saveFolder = path.dirname(savePath)
-    if (!fs.existsSync(saveFolder)) {
-      fs.mkdirSync(saveFolder, { recursive: true })
+    // TODO: 之后可能要结合 disableRecordMeta 之类的来确认是否要创建文件。
+    const extraDataSavePath = savePath + '.json'
+    // TODO: 这个 ensure 或许应该放在 createRecordExtraDataController 里实现？
+    ensureFolderExist(extraDataSavePath)
+    const extraDataController =
+      createRecordExtraDataController(extraDataSavePath)
+
+    extraDataController.setMeta({ title })
+
+    const client = createDYClient(Number(opts.channelId), {
+      notAutoStart: true,
+    })
+    client.on('message', (msg) => {
+      switch (msg.type) {
+        case 'chatmsg':
+          const comment: Comment = {
+            timestamp: Date.now(),
+            text: msg.txt,
+            sender: {
+              uid: msg.uid,
+              name: msg.nn,
+              avatar: msg.ic,
+              extra: {
+                level: msg.level,
+              },
+            },
+          }
+          this.emit('Message', comment)
+          extraDataController.addMessage(comment)
+          break
+
+        case 'dgb':
+          const gift: GiveGift = {
+            timestamp: Date.now(),
+            name: giftMap[msg.gfid]?.name ?? '未知礼物',
+            count: Number(msg.gfcnt),
+            sender: {
+              uid: msg.uid,
+              name: msg.nn,
+              avatar: msg.ic,
+              extra: {
+                level: msg.level,
+              },
+            },
+            extra: {
+              hits: Number(msg.hits),
+            },
+          }
+          this.emit('Message', gift)
+          extraDataController.addMessage(gift)
+          break
+      }
+    })
+    if (!this.disableProvideCommentsWhenRecording) {
+      client.start()
     }
+
+    const recordSavePath = savePath + '.flv'
+    ensureFolderExist(recordSavePath)
 
     const callback = (...args: unknown[]) => {
       console.log('cb', ...args)
@@ -68,7 +125,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
         '-flvflags',
         'add_keyframe_index'
       )
-      .output(savePath)
+      .output(recordSavePath)
       .on('error', callback)
       .on('end', () => callback())
       .on('stderr', (stderrLine) => {
@@ -85,7 +142,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
         //   // todo 在此处对长时间无frame时的情况做检查
         // }
       })
-    command.run()
+    // command.run()
 
     const stop = singleton<RecordHandle['stop']>(async () => {
       if (!this.recordHandle) return
@@ -93,6 +150,8 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
       // TODO: emit update event
 
       command.kill('SIGKILL')
+      // TODO: 这里可能会有内存泄露，因为事件还没清，之后再检查下看看
+      client.stop()
 
       this.usedStream = undefined
       this.usedSource = undefined
@@ -109,7 +168,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
       stream: stream.name,
       source: stream.source,
       url: stream.url,
-      savePath,
+      savePath: recordSavePath,
       stop,
     }
     this.emit('RecordStart', this.recordHandle)

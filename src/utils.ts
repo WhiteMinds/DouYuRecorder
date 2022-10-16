@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import * as R from 'ramda'
 
 /**
@@ -66,4 +68,11 @@ export function getValuesFromArrayLikeFlexSpaceBetween<T>(
   })
 
   return columnValues
+}
+
+export function ensureFolderExist(fileOrFolderPath: string): void {
+  const folder = path.dirname(fileOrFolderPath)
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true })
+  }
 }

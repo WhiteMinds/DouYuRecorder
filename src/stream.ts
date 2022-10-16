@@ -14,10 +14,32 @@ export async function getInfo(channelId: string): Promise<{
   owner: string
   title: string
   startTime: Date
+  gifts: {
+    id: string
+    name: string
+    img: string
+    cost: number
+  }[]
 }> {
-  const res = await requester.get<any>(
-    `http://open.douyucdn.cn/api/RoomApi/room/${channelId}`
-  )
+  const res = await requester.get<
+    | {
+        error: number
+        data: {
+          room_status: string
+          owner_name: string
+          avatar: string
+          room_name: string
+          start_time: string
+          gift: {
+            id: string
+            name: string
+            himg: string
+            pc: number
+          }[]
+        }
+      }
+    | string
+  >(`http://open.douyucdn.cn/api/RoomApi/room/${channelId}`)
 
   if (res.status !== 200) {
     if (res.status === 404 && res.data === 'Not Found') {
@@ -26,6 +48,9 @@ export async function getInfo(channelId: string): Promise<{
 
     throw new Error(`Unexpected status code, ${res.status}, ${res.data}`)
   }
+
+  if (typeof res.data !== 'object')
+    throw new Error(`Unexpected response, ${res.status}, ${res.data}`)
 
   const json = res.data
   if (json.error === 101) throw new Error('错误的地址 ' + channelId)
@@ -47,6 +72,12 @@ export async function getInfo(channelId: string): Promise<{
     owner: json.data.owner_name,
     title: json.data.room_name,
     startTime: new Date(json.data.start_time),
+    gifts: json.data.gift.map((g) => ({
+      id: g.id,
+      name: g.name,
+      img: g.himg,
+      cost: g.pc,
+    })),
   }
 }
 

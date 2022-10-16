@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/douyu-recorder",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "LAR douyu recorder implemention",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -17,18 +17,20 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/manager": "^0.0.14",
+    "@autorecord/manager": "^0.0.15",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.1.1",
     "query-string": "^7.1.1",
     "ramda": "^0.28.0",
     "uuid": "^8.3.2",
-    "vm2": "^3.9.10"
+    "vm2": "^3.9.10",
+    "ws": "^8.9.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
     "@types/ramda": "^0.28.15",
-    "@types/uuid": "^8.3.4"
+    "@types/uuid": "^8.3.4",
+    "@types/ws": "^8.5.3"
   }
 }
