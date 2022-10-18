@@ -68,6 +68,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
       switch (msg.type) {
         case 'chatmsg':
           const comment: Comment = {
+            type: 'comment',
             timestamp: Date.now(),
             text: msg.txt,
             sender: {
@@ -85,6 +86,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
 
         case 'dgb':
           const gift: GiveGift = {
+            type: 'give_gift',
             timestamp: Date.now(),
             name: giftMap[msg.gfid]?.name ?? '未知礼物',
             count: Number(msg.gfcnt),
@@ -103,6 +105,8 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
           this.emit('Message', gift)
           extraDataController.addMessage(gift)
           break
+
+        // TODO: 还有一些其他礼物相关的 msg 要处理，目前先简单点只处理 dgb
       }
     })
     if (!this.disableProvideCommentsWhenRecording) {
@@ -115,7 +119,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     const callback = (...args: unknown[]) => {
       console.log('cb', ...args)
     }
-    // TODO: 主播重新开关播后原来的直播流地址会失效，这可能会导致录制出现问题，需要处理
+    // TODO: 主播重新开关播后原来的直播流地址会失效，这可能会导致录制出现问题，需要处理。
     const command = createFFMPEGBuilder(stream.url)
       .outputOptions(
         '-user_agent',
@@ -139,19 +143,23 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
         //       createNotice(channel.profile, channelInfo.title)
         //   }
 
-        //   // todo 在此处对长时间无frame时的情况做检查
+        //   // TODO: 在此处对长时间无frame时的情况做检查。
         // }
       })
-    // command.run()
+    command.run()
+    extraDataController.setMeta({ recordStartTimestamp: Date.now() })
 
     const stop = singleton<RecordHandle['stop']>(async () => {
       if (!this.recordHandle) return
       this.state = 'stopping-record'
       // TODO: emit update event
 
-      command.kill('SIGKILL')
-      // TODO: 这里可能会有内存泄露，因为事件还没清，之后再检查下看看
+      // 如果给 SIGKILL 信号会非正常退出，那么录制结束时应该应用的 add_keyframe_index 就会被跳过。
+      // TODO: fluent-ffmpeg 好像没处理好这个 SIGINT 导致的退出信息，会抛一个错。
+      command.kill('SIGINT')
+      // TODO: 这里可能会有内存泄露，因为事件还没清，之后再检查下看看。
       client.stop()
+      extraDataController.flush()
 
       this.usedStream = undefined
       this.usedSource = undefined
