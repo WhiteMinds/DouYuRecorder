@@ -204,6 +204,8 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     return this.recordHandle
   })
 
+  // 内部实现时，应该只有 proxy 包裹的那一层会使用这个 recorder 标识符，不应该有直接通过
+  // 此标志来操作这个对象的地方，不然会跳过 proxy 的拦截。
   const recorder: Recorder = {
     id: opts.id ?? genRecorderUUID(),
     ...mitt(),
@@ -223,7 +225,19 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     },
   }
 
-  return recorder
+  const recorderWithSupportUpdatedEvent = new Proxy(recorder, {
+    set(obj, prop, value) {
+      Reflect.set(obj, prop, value)
+
+      if (typeof prop === 'string') {
+        obj.emit('Updated', [prop])
+      }
+
+      return true
+    },
+  })
+
+  return recorderWithSupportUpdatedEvent
 }
 
 export const provider: RecorderProvider = {
