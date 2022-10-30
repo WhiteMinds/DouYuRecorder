@@ -3,8 +3,7 @@
 import { createRecorderManager } from '@autorecord/manager'
 import { provider } from '.'
 
-const manager = createRecorderManager()
-manager.loadRecorderProvider(provider)
+const manager = createRecorderManager({ providers: [provider] })
 manager.addRecorder({
   providerId: provider.id,
   channelId: '74751',

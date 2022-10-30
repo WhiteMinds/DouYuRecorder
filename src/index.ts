@@ -208,6 +208,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
   // 此标志来操作这个对象的地方，不然会跳过 proxy 的拦截。
   const recorder: Recorder = {
     id: opts.id ?? genRecorderUUID(),
+    extra: opts.extra ?? {},
     ...mitt(),
     ...opts,
 
@@ -240,7 +241,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
   return recorderWithSupportUpdatedEvent
 }
 
-export const provider: RecorderProvider = {
+export const provider: RecorderProvider<{}> = {
   id: 'DouYu',
   name: '斗鱼',
   siteURL: 'https://douyu.com/',
