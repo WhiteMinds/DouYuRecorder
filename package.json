@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/douyu-recorder",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "LAR douyu recorder implemention",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -17,7 +17,6 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/manager": "^0.0.17",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.1.1",
@@ -34,5 +33,8 @@
     "@types/uuid": "^8.3.4",
     "@types/ws": "^8.5.3",
     "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "@autorecord/manager": "^0.0.18"
   }
 }
