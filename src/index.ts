@@ -25,9 +25,45 @@ const requester = axios.create({
 })
 
 function createRecorder(opts: RecorderCreateOpts): Recorder {
-  const checkLiveStatusAndRecord = singleton<
-    Recorder['checkLiveStatusAndRecord']
-  >(async function ({ getSavePath }) {
+  // 内部实现时，应该只有 proxy 包裹的那一层会使用这个 recorder 标识符，不应该有直接通过
+  // 此标志来操作这个对象的地方，不然会跳过 proxy 的拦截。
+  const recorder: Recorder = {
+    id: opts.id ?? genRecorderUUID(),
+    extra: opts.extra ?? {},
+    ...mitt(),
+    ...opts,
+
+    availableStreams: [],
+    availableSources: [],
+    state: 'idle',
+
+    getChannelURL() {
+      return `https://www.douyu.com/${this.channelId}`
+    },
+    checkLiveStatusAndRecord: singleton(checkLiveStatusAndRecord),
+
+    toJSON() {
+      return defaultToJSON(provider, this)
+    },
+  }
+
+  const recorderWithSupportUpdatedEvent = new Proxy(recorder, {
+    set(obj, prop, value) {
+      Reflect.set(obj, prop, value)
+
+      if (typeof prop === 'string') {
+        obj.emit('Updated', [prop])
+      }
+
+      return true
+    },
+  })
+
+  return recorderWithSupportUpdatedEvent
+}
+
+const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
+  async function ({ getSavePath }) {
     if (this.recordHandle != null) return this.recordHandle
 
     const { living, owner, title } = await getInfo(this.channelId)
@@ -39,10 +75,10 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
       sources: availableSources,
       streams: availableStreams,
     } = await getStream({
-      channelId: opts.channelId,
-      quality: opts.quality,
-      streamPriorities: opts.streamPriorities,
-      sourcePriorities: opts.sourcePriorities,
+      channelId: this.channelId,
+      quality: this.quality,
+      streamPriorities: this.streamPriorities,
+      sourcePriorities: this.sourcePriorities,
     })
     this.availableStreams = availableStreams.map((s) => s.name)
     this.availableSources = availableSources.map((s) => s.name)
@@ -61,7 +97,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
 
     extraDataController.setMeta({ title })
 
-    const client = createDYClient(Number(opts.channelId), {
+    const client = createDYClient(Number(this.channelId), {
       notAutoStart: true,
     })
     client.on('message', (msg) => {
@@ -202,44 +238,7 @@ function createRecorder(opts: RecorderCreateOpts): Recorder {
     this.emit('RecordStart', this.recordHandle)
 
     return this.recordHandle
-  })
-
-  // 内部实现时，应该只有 proxy 包裹的那一层会使用这个 recorder 标识符，不应该有直接通过
-  // 此标志来操作这个对象的地方，不然会跳过 proxy 的拦截。
-  const recorder: Recorder = {
-    id: opts.id ?? genRecorderUUID(),
-    extra: opts.extra ?? {},
-    ...mitt(),
-    ...opts,
-
-    availableStreams: [],
-    availableSources: [],
-    state: 'idle',
-
-    getChannelURL() {
-      return `https://www.douyu.com/${this.channelId}`
-    },
-    checkLiveStatusAndRecord,
-
-    toJSON() {
-      return defaultToJSON(provider, this)
-    },
   }
-
-  const recorderWithSupportUpdatedEvent = new Proxy(recorder, {
-    set(obj, prop, value) {
-      Reflect.set(obj, prop, value)
-
-      if (typeof prop === 'string') {
-        obj.emit('Updated', [prop])
-      }
-
-      return true
-    },
-  })
-
-  return recorderWithSupportUpdatedEvent
-}
 
 export const provider: RecorderProvider<{}> = {
   id: 'DouYu',

@@ -1,4 +1,3 @@
-import * as cheerio from 'cheerio'
 import axios from 'axios'
 import { Qualities, Recorder } from '@autorecord/manager'
 import { getLiveInfo, SourceProfile, StreamProfile } from './dy_api'
