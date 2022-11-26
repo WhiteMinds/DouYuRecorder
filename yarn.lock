@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@autorecord/manager@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.18.tgz#27f9196a0e458b1464e0d0107755acefaa53c33e"
-  integrity sha512-zAmxLchW1bxodSqF1XzwZKwsRJSCVvC1swh9gPwIal+XWFmGJRGykNpJDMtlmOkZKJ2DtHYVAOFO6CqWjCP7IQ==
+"@autorecord/manager@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.20.tgz#c64554b3bcd2b469884685f51013244a6261c386"
+  integrity sha512-NhclqaVC74uAfKoN4phBOxZioBqdY4Kh6N77BFcEWHf3ugVXe+eMH4aVmPCOpEq6PRjgORKTItdN7A99KqFD6Q==
   dependencies:
     "@types/fluent-ffmpeg" "^2.1.20"
     ffmpeg-static "^5.0.2"
@@ -37,6 +37,11 @@
   integrity sha512-B+OvhCdJ3LgEq2PhvWNOiB/EfwnXLElfMCgc4Z1K5zXgSfo9I6uGKwR/lqmNPFQuebNnes7re3gqkV77SyypLg==
   dependencies:
     "@types/node" "*"
+
+"@types/lodash@^4.14.190":
+  version "4.14.190"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.190.tgz#d8e99647af141c63902d0ca53cf2b34d2df33545"
+  integrity sha512-5iJ3FBJBvQHQ8sFhEhJfjUP+G+LalhavTkYyrAYqz5MEJG+erSv0k9KJLb6q7++17Lafk1scaTIFXcMJlwK8Mw==
 
 "@types/node@*":
   version "18.8.5"

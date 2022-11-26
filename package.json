@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/douyu-recorder",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "LAR douyu recorder implemention",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -28,13 +28,16 @@
     "ws": "^8.9.0"
   },
   "devDependencies": {
+    "@autorecord/manager": "^0.0.20",
     "@types/crypto-js": "^4.1.1",
+    "@types/lodash": "^4.14.190",
+    "@types/node": "*",
     "@types/ramda": "^0.28.15",
     "@types/uuid": "^8.3.4",
     "@types/ws": "^8.5.3",
     "typescript": "^4.8.4"
   },
   "peerDependencies": {
-    "@autorecord/manager": "^0.0.18"
+    "@autorecord/manager": "*"
   }
 }
