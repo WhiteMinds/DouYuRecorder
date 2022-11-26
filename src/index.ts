@@ -154,6 +154,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
 
     const callback = (...args: unknown[]) => {
       console.log('cb', ...args)
+      this.recordHandle?.stop()
     }
     // TODO: 主播重新开关播后原来的直播流地址会失效，这可能会导致录制出现问题，需要处理。
     /**
