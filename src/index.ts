@@ -188,7 +188,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
       .on('error', callback)
       .on('end', () => callback())
       .on('stderr', (stderrLine) => {
-        console.error(`FFMPEG [${this.channelId}]:`, stderrLine)
+        this.emit('DebugLog', { type: 'ffmpeg', text: stderrLine })
 
         // if (stderrLine.startsWith('frame=')) {
         //   if (waitFirstFrame) {
