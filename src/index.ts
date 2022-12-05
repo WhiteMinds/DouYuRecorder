@@ -79,8 +79,9 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
         streamPriorities: this.streamPriorities,
         sourcePriorities: this.sourcePriorities,
       })
-    } finally {
+    } catch (err) {
       this.state = 'idle'
+      throw err
     }
     const {
       currentStream: stream,
