@@ -70,16 +70,23 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
     if (!living) return null
 
     this.state = 'recording'
+    let res
+    // TODO: 先不做什么错误处理，就简单包一下预期上会有错误的地方
+    try {
+      res = await getStream({
+        channelId: this.channelId,
+        quality: this.quality,
+        streamPriorities: this.streamPriorities,
+        sourcePriorities: this.sourcePriorities,
+      })
+    } finally {
+      this.state = 'idle'
+    }
     const {
       currentStream: stream,
       sources: availableSources,
       streams: availableStreams,
-    } = await getStream({
-      channelId: this.channelId,
-      quality: this.quality,
-      streamPriorities: this.streamPriorities,
-      sourcePriorities: this.sourcePriorities,
-    })
+    } = res
     this.availableStreams = availableStreams.map((s) => s.name)
     this.availableSources = availableSources.map((s) => s.name)
     this.usedStream = stream.name
