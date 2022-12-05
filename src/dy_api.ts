@@ -59,9 +59,6 @@ export async function getLiveInfo(opts: {
       cdn: opts.cdn ?? '',
       // 相当于清晰度类型的 id，给 -1 会由后端决定
       rate: String(opts.rate ?? -1),
-      // TODO: 这两个不知道干啥的
-      iar: '1',
-      ive: '0',
     })
   )
 
