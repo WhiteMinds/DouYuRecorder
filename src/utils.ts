@@ -76,3 +76,10 @@ export function ensureFolderExist(fileOrFolderPath: string): void {
     fs.mkdirSync(folder, { recursive: true })
   }
 }
+
+export function replaceExtName(filePath: string, newExtName: string) {
+  return path.join(
+    path.dirname(filePath),
+    path.basename(filePath, path.extname(filePath)) + newExtName
+  )
+}
