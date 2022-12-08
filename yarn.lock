@@ -2,17 +2,19 @@
 # yarn lockfile v1
 
 
-"@autorecord/manager@^0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-0.0.21.tgz#5534b31e815ffeb8f21765f2a4f6150e08c0cfa4"
-  integrity sha512-xlpFwdJqVUrLCndIlXq0rRP4HEkEM9grkrsfG0e5E92NVMMdlUga5Wl4rEf2rsYW6nNPmy0kyS6poefYwaoQDw==
+"@autorecord/manager@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@autorecord/manager/-/manager-1.0.0.tgz#42f9216d2846945cb6eef95b61018d941a44ef6a"
+  integrity sha512-rgez7xEEfbqV1c8mKVflADtKAB7fbAJRFt1jf7W2HLffnNaNGucNGI9Bus8STzV/5bAhTfQWVzt24GeWv9gZoQ==
   dependencies:
     "@types/fluent-ffmpeg" "^2.1.20"
+    date-fns "^2.29.3"
     ffmpeg-static "^5.0.2"
     fluent-ffmpeg "^2.1.2"
     lodash "^4.17.21"
     mitt "^3.0.0"
     ramda "^0.28.0"
+    string-argv "^0.3.1"
     string-template "^1.0.0"
     uuid "^9.0.0"
 
@@ -184,6 +186,11 @@ css-what@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-6.1.0.tgz#fb5effcf76f1ddea2c81bdfaa4de44e79bac70f4"
   integrity sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==
+
+date-fns@^2.29.3:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
+  integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
 
 debug@4:
   version "4.3.4"
@@ -411,6 +418,11 @@ strict-uri-encode@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
   integrity sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==
+
+string-argv@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.3.1.tgz#95e2fbec0427ae19184935f816d74aaa4c5c19da"
+  integrity sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==
 
 string-template@^1.0.0:
   version "1.0.0"
