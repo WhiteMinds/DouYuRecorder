@@ -213,8 +213,13 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
       // 如果给 SIGKILL 信号会非正常退出，SIGINT 可以被 ffmpeg 正常处理。
       // TODO: fluent-ffmpeg 好像没处理好这个 SIGINT 导致的退出信息，会抛一个错。
       command.kill('SIGINT')
-      // TODO: 这里可能会有内存泄露，因为事件还没清，之后再检查下看看。
-      client.stop()
+      try {
+        // TODO: 这里可能会有内存泄露，因为事件还没清，之后再检查下看看。
+        client.stop()
+      } catch (err) {
+        // TODO: 这个 stop 经常报错，这里先把错误吞掉，以后再处理。
+        this.emit('DebugLog', { type: 'common', text: String(err) })
+      }
       extraDataController.setMeta({ recordStopTimestamp: Date.now() })
       extraDataController.flush()
 
