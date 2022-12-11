@@ -200,8 +200,12 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
         //   // TODO: 在此处对长时间无frame时的情况做检查。
         // }
       })
+    const ffmpegArgs = command._getArguments()
+    extraDataController.setMeta({
+      recordStartTimestamp: Date.now(),
+      ffmpegArgs,
+    })
     command.run()
-    extraDataController.setMeta({ recordStartTimestamp: Date.now() })
 
     // TODO: 需要一个机制防止空录制，比如检查文件的大小变化、ffmpeg 的输出、直播状态等
 
@@ -238,6 +242,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] =
       stream: stream.name,
       source: stream.source,
       url: stream.url,
+      ffmpegArgs,
       savePath: recordSavePath,
       stop,
     }
