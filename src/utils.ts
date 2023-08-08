@@ -6,9 +6,7 @@ import * as R from 'ramda'
  * 接收 fn ，返回一个和 fn 签名一致的函数 fn'。当已经有一个 fn' 在运行时，再调用
  * fn' 会直接返回运行中 fn' 的 Promise，直到 Promise 结束 pending 状态
  */
-export function singleton<Fn extends (...args: any) => Promise<any>>(
-  fn: Fn
-): Fn {
+export function singleton<Fn extends (...args: any) => Promise<any>>(fn: Fn): Fn {
   let latestPromise: Promise<unknown> | null = null
 
   return function (...args) {
@@ -42,10 +40,7 @@ export function singleton<Fn extends (...args: any) => Promise<any>>(
  * // [1, 1, 2, 3, 3, 4, 5, 5, 6, 7, 7]
  * ```
  */
-export function getValuesFromArrayLikeFlexSpaceBetween<T>(
-  array: T[],
-  columnCount: number
-): T[] {
+export function getValuesFromArrayLikeFlexSpaceBetween<T>(array: T[], columnCount: number): T[] {
   if (columnCount < 1) return []
   if (columnCount === 1) return [array[0]]
 
@@ -78,10 +73,7 @@ export function ensureFolderExist(fileOrFolderPath: string): void {
 }
 
 export function replaceExtName(filePath: string, newExtName: string) {
-  return path.join(
-    path.dirname(filePath),
-    path.basename(filePath, path.extname(filePath)) + newExtName
-  )
+  return path.join(path.dirname(filePath), path.basename(filePath, path.extname(filePath)) + newExtName)
 }
 
 export function assert(assertion: unknown, msg?: string): asserts assertion {

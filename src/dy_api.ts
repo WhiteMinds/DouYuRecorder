@@ -38,10 +38,7 @@ export async function getLiveInfo(opts: {
   const did = uuid4().replace(/-/g, '')
   const time = Math.ceil(Date.now() / 1000)
   // TODO: 这里类型处理的有点问题，先用 as 顶着
-  const signed = queryString.parse(sign(opts.channelId, did, time)) as Record<
-    string,
-    string
-  >
+  const signed = queryString.parse(sign(opts.channelId, did, time)) as Record<string, string>
 
   // TODO: 以后可以试试换成 https://open.douyu.com/source/api/9 里提供的公开接口，
   // 不过公开接口可能会存在最高码率的限制。
@@ -59,15 +56,11 @@ export async function getLiveInfo(opts: {
       cdn: opts.cdn ?? '',
       // 相当于清晰度类型的 id，给 -1 会由后端决定
       rate: String(opts.rate ?? -1),
-    })
+    }),
   )
 
   if (res.status !== 200) {
-    if (
-      res.status === 403 &&
-      res.data === '鉴权失败' &&
-      !opts.rejectSignFnCache
-    ) {
+    if (res.status === 403 && res.data === '鉴权失败' && !opts.rejectSignFnCache) {
       // 使用非缓存的sign函数再次签名
       return getLiveInfo({ ...opts, rejectSignFnCache: true })
     }
@@ -101,8 +94,7 @@ export async function getLiveInfo(opts: {
       name:
         json.data.rateSwitch !== 1
           ? '原画'
-          : json.data.multirates.find(({ rate }) => rate === json.data.rate)
-              ?.name ?? '未知',
+          : json.data.multirates.find(({ rate }) => rate === json.data.rate)?.name ?? '未知',
       rate: json.data.rate,
       url: `${json.data.rtmp_url}/${json.data.rtmp_live}`,
     },
@@ -117,29 +109,23 @@ const disguisedNativeMethods = new Proxy(
     get: function (target, name) {
       return 'function () { [native code] }'
     },
-  }
+  },
 )
 
 type SignFunction = (channelId: string, did: string, time: number) => string
 const signCaches: Record<string, SignFunction> = {}
 
-async function getSignFn(
-  address: string,
-  rejectCache?: boolean
-): Promise<SignFunction> {
+async function getSignFn(address: string, rejectCache?: boolean): Promise<SignFunction> {
   if (!rejectCache && signCaches.hasOwnProperty(address)) {
     // 有缓存, 直接使用
     return signCaches[address]
   }
 
-  let res = await requester.get(
-    'https://www.douyu.com/swf_api/homeH5Enc?rids=' + address
-  )
+  let res = await requester.get('https://www.douyu.com/swf_api/homeH5Enc?rids=' + address)
   const json = res.data
   if (json.error !== 0) throw new Error('Unexpected error code, ' + json.error)
   let code = json.data && json.data['room' + address]
-  if (!code)
-    throw new Error('Unexpected result with homeH5Enc, ' + JSON.stringify(json))
+  if (!code) throw new Error('Unexpected result with homeH5Enc, ' + JSON.stringify(json))
 
   const vm = new VM({
     sandbox: {

@@ -7,8 +7,7 @@ export class BufferCoder {
 
   concat(...buffers: ArrayBuffer[]): Uint8Array {
     return buffers.reduce(function (result: Uint8Array, buffer) {
-      const bufferView =
-        buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
+      const bufferView = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
 
       const newResult = new Uint8Array(result.length + bufferView.length)
       newResult.set(result, 0)
@@ -17,11 +16,7 @@ export class BufferCoder {
     }, new Uint8Array(0))
   }
 
-  decode(
-    newBuffer: ArrayBuffer,
-    callback: (message: string) => void,
-    littleEndian?: boolean
-  ) {
+  decode(newBuffer: ArrayBuffer, callback: (message: string) => void, littleEndian?: boolean) {
     if (littleEndian == null) {
       littleEndian = this.littleEndian
     }
@@ -37,9 +32,7 @@ export class BufferCoder {
 
       if (this.buffer.byteLength < this.readLength) return
 
-      const message = this.decoder.decode(
-        this.buffer.slice(8, this.readLength - 1)
-      )
+      const message = this.decoder.decode(this.buffer.slice(8, this.readLength - 1))
       this.buffer = this.buffer.slice(this.readLength)
       this.readLength = 0
       callback(message)

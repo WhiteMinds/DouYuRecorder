@@ -68,18 +68,16 @@ export function createDYClient(
   channelId: number,
   opts: {
     notAutoStart?: boolean
-  } = {}
+  } = {},
 ): DYClient {
   let ws: WebSocket | null = null
   let coder = new BufferCoder()
   let heartbeatTimer: NodeJS.Timer | null = null
 
-  const send = (message: Record<string, unknown>) =>
-    ws?.send(coder.encode(STT.serialize(message)))
+  const send = (message: Record<string, unknown>) => ws?.send(coder.encode(STT.serialize(message)))
 
   const sendLogin = () => send({ type: 'loginreq', roomid: channelId })
-  const sendJoinGroup = () =>
-    send({ type: 'joingroup', rid: channelId, gid: -9999 })
+  const sendJoinGroup = () => send({ type: 'joingroup', rid: channelId, gid: -9999 })
   const sendHeartbeat = () => send({ type: 'mrkl' })
   const sendLogout = () => send({ type: 'logout' })
 
@@ -111,7 +109,7 @@ export function createDYClient(
     client.emit(
       'message',
       // TODO: 不太好验证 schema，先强制转了
-      message as Message
+      message as Message,
     )
   }
 
@@ -159,8 +157,6 @@ export function createDYClient(
 }
 
 function getRandomPortWSURL(): string {
-  const port =
-    8500 +
-    ((min, max) => Math.floor(Math.random() * (max - min + 1) + min))(1, 6)
+  const port = 8500 + ((min, max) => Math.floor(Math.random() * (max - min + 1) + min))(1, 6)
   return `wss://danmuproxy.douyu.com:${port}/`
 }

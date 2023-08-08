@@ -35,11 +35,14 @@ export namespace STT {
       return raw
         .split('/')
         .filter((part) => part !== '')
-        .reduce((obj, part) => {
-          const [key, val] = part.split('@=')
-          obj[key] = val ? STT.deserialize(val) : ''
-          return obj
-        }, {} as Record<string, unknown>)
+        .reduce(
+          (obj, part) => {
+            const [key, val] = part.split('@=')
+            obj[key] = val ? STT.deserialize(val) : ''
+            return obj
+          },
+          {} as Record<string, unknown>,
+        )
     }
 
     return STT.unescape(raw)

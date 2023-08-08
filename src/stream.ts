@@ -48,8 +48,7 @@ export async function getInfo(channelId: string): Promise<{
     throw new Error(`Unexpected status code, ${res.status}, ${res.data}`)
   }
 
-  if (typeof res.data !== 'object')
-    throw new Error(`Unexpected response, ${res.status}, ${res.data}`)
+  if (typeof res.data !== 'object') throw new Error(`Unexpected response, ${res.status}, ${res.data}`)
 
   const json = res.data
   if (json.error === 101) throw new Error('错误的地址 ' + channelId)
@@ -57,9 +56,7 @@ export async function getInfo(channelId: string): Promise<{
 
   let living = json.data.room_status === '1'
   if (living) {
-    const res = await requester.get<string>(
-      `https://www.douyu.com/${channelId}`
-    )
+    const res = await requester.get<string>(`https://www.douyu.com/${channelId}`)
     const isVideoLoop = res.data.includes('"videoLoop":1,')
     if (isVideoLoop) {
       living = false
@@ -81,10 +78,7 @@ export async function getInfo(channelId: string): Promise<{
 }
 
 export async function getStream(
-  opts: Pick<
-    Recorder,
-    'channelId' | 'quality' | 'streamPriorities' | 'sourcePriorities'
-  > & { rejectCache?: boolean }
+  opts: Pick<Recorder, 'channelId' | 'quality' | 'streamPriorities' | 'sourcePriorities'> & { rejectCache?: boolean },
 ) {
   let liveInfo = await getLiveInfo({
     channelId: opts.channelId,
@@ -93,41 +87,32 @@ export async function getStream(
   if (!liveInfo.living) throw new Error()
 
   let expectStream: StreamProfile | null = null
-  const streamsWithPriority = sortAndFilterStreamsByPriority(
-    liveInfo.streams,
-    opts.streamPriorities
-  )
+  const streamsWithPriority = sortAndFilterStreamsByPriority(liveInfo.streams, opts.streamPriorities)
   if (streamsWithPriority.length > 0) {
     // 通过优先级来选择对应流
     expectStream = streamsWithPriority[0]
   } else {
     // 通过设置的画质选项来选择对应流
-    const isHighestAsExpected =
-      opts.quality === 'highest' && liveInfo.isOriginalStream
+    const isHighestAsExpected = opts.quality === 'highest' && liveInfo.isOriginalStream
     if (!isHighestAsExpected) {
       const streams = getValuesFromArrayLikeFlexSpaceBetween(
         // 斗鱼给的画质列表是按照清晰到模糊的顺序的，这里翻转下
         R.reverse(liveInfo.streams),
-        Qualities.length
+        Qualities.length,
       )
       expectStream = streams[Qualities.indexOf(opts.quality)]
     }
   }
 
   let expectSource: SourceProfile | null = null
-  const sourcesWithPriority = sortAndFilterSourcesByPriority(
-    liveInfo.sources,
-    opts.sourcePriorities
-  )
+  const sourcesWithPriority = sortAndFilterSourcesByPriority(liveInfo.sources, opts.sourcePriorities)
   if (sourcesWithPriority.length > 0) {
     expectSource = sourcesWithPriority[0]
   }
 
   if (
-    (expectStream != null &&
-      liveInfo.currentStream.rate !== expectStream.rate) ||
-    (expectSource != null &&
-      liveInfo.currentStream.source !== expectSource.name)
+    (expectStream != null && liveInfo.currentStream.rate !== expectStream.rate) ||
+    (expectSource != null && liveInfo.currentStream.source !== expectSource.name)
   ) {
     // 当前流不是预期的流或源，需要切换。
     // TODO: 这一步可能会导致原画的流被切走并且没法再取得，需要额外进行提示。
@@ -156,7 +141,7 @@ export async function getStream(
  */
 function sortAndFilterStreamsByPriority(
   streams: StreamProfile[],
-  streamPriorities: Recorder['streamPriorities']
+  streamPriorities: Recorder['streamPriorities'],
 ): (StreamProfile & {
   priority: number
 })[] {
@@ -170,7 +155,7 @@ function sortAndFilterStreamsByPriority(
         ...stream,
         priority: R.reverse(streamPriorities).indexOf(stream.name),
       }))
-      .filter(({ priority }) => priority !== -1)
+      .filter(({ priority }) => priority !== -1),
   )
 }
 
@@ -179,7 +164,7 @@ function sortAndFilterStreamsByPriority(
  */
 function sortAndFilterSourcesByPriority(
   sources: SourceProfile[],
-  sourcePriorities: Recorder['sourcePriorities']
+  sourcePriorities: Recorder['sourcePriorities'],
 ): (SourceProfile & {
   priority: number
 })[] {
@@ -193,6 +178,6 @@ function sortAndFilterSourcesByPriority(
         ...source,
         priority: R.reverse(sourcePriorities).indexOf(source.name),
       }))
-      .filter(({ priority }) => priority !== -1)
+      .filter(({ priority }) => priority !== -1),
   )
 }
