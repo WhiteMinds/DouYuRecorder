@@ -12,8 +12,7 @@ export function singleton<Fn extends (...args: any) => Promise<any>>(fn: Fn): Fn
   return function (...args) {
     if (latestPromise) return latestPromise
 
-    const promise = fn.apply(this, args)
-    promise.finally(() => {
+    const promise = fn.apply(this, args).finally(() => {
       if (promise === latestPromise) {
         latestPromise = null
       }
