@@ -177,7 +177,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
         onEnd('invalid stream')
       }
     })
-    .on('stderr', timeoutChecker)
+    .on('stderr', timeoutChecker.update)
   const ffmpegArgs = command._getArguments()
   extraDataController.setMeta({
     recordStartTimestamp: Date.now(),
@@ -191,6 +191,8 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
     if (!this.recordHandle) return
     this.state = 'stopping-record'
     // TODO: emit update event
+
+    timeoutChecker.stop()
 
     // 如果给 SIGKILL 信号会非正常退出，SIGINT 可以被 ffmpeg 正常处理。
     // TODO: fluent-ffmpeg 好像没处理好这个 SIGINT 导致的退出信息，会抛一个错。
@@ -229,19 +231,30 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
   return this.recordHandle
 }
 
-function createTimeoutChecker(onTimeout: () => void, time: number): (ffmpegLogLine: string) => void {
-  let lastTime = Date.now()
-  let called = false
+function createTimeoutChecker(
+  onTimeout: () => void,
+  time: number,
+): {
+  update: () => void
+  stop: () => void
+} {
+  let timer: NodeJS.Timeout | null = null
 
-  return () => {
-    if (called) return
-    const now = Date.now()
-    if (now - lastTime > time) {
-      called = true
+  const update = () => {
+    if (timer != null) clearTimeout(timer)
+    timer = setTimeout(() => {
+      timer = null
       onTimeout()
-    } else {
-      lastTime = now
-    }
+    }, time)
+  }
+
+  update()
+
+  return {
+    update,
+    stop() {
+      if (timer != null) clearTimeout(timer)
+    },
   }
 }
 
