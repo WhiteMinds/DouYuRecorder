@@ -15,14 +15,10 @@ import {
   GiveGift,
 } from '@autorecord/manager'
 import { getInfo, getStream } from './stream'
-import axios from 'axios'
 import { assert, ensureFolderExist, replaceExtName, singleton } from './utils'
 import { createDYClient } from './dy_client'
 import { giftMap } from './gift_map'
-
-const requester = axios.create({
-  timeout: 10e3,
-})
+import { requester } from './requester'
 
 function createRecorder(opts: RecorderCreateOpts): Recorder {
   // 内部实现时，应该只有 proxy 包裹的那一层会使用这个 recorder 标识符，不应该有直接通过

@@ -1,12 +1,8 @@
-import axios from 'axios'
 import { Qualities, Recorder } from '@autorecord/manager'
 import { getLiveInfo, SourceProfile, StreamProfile } from './dy_api'
 import * as R from 'ramda'
 import { getValuesFromArrayLikeFlexSpaceBetween } from './utils'
-
-const requester = axios.create({
-  timeout: 10e3,
-})
+import { requester } from './requester'
 
 export async function getInfo(channelId: string): Promise<{
   living: boolean

@@ -1,12 +1,8 @@
 import { v4 as uuid4 } from 'uuid'
 import MD5 from 'crypto-js/md5'
 import { VM } from 'vm2'
-import axios from 'axios'
 import * as queryString from 'query-string'
-
-const requester = axios.create({
-  timeout: 10e3,
-})
+import { requester } from './requester'
 
 /**
  * 对斗鱼 getH5Play 接口的封装
