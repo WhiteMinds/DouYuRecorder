@@ -239,8 +239,10 @@ function createTimeoutChecker(
   stop: () => void
 } {
   let timer: NodeJS.Timeout | null = null
+  let stopped: boolean = false
 
   const update = () => {
+    if (stopped) return
     if (timer != null) clearTimeout(timer)
     timer = setTimeout(() => {
       timer = null
@@ -253,7 +255,9 @@ function createTimeoutChecker(
   return {
     update,
     stop() {
+      stopped = true
       if (timer != null) clearTimeout(timer)
+      timer = null
     },
   }
 }
