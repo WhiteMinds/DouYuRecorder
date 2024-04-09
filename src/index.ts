@@ -87,13 +87,19 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
   // TODO: emit update event
 
   const savePath = getSavePath({ owner, title })
+  const extraDataSavePath = replaceExtName(savePath, '.json')
+  const recordSavePath = savePath
+  try {
+    // TODO: 这个 ensure 或许应该放在 createRecordExtraDataController 里实现？
+    ensureFolderExist(extraDataSavePath)
+    ensureFolderExist(recordSavePath)
+  } catch (err) {
+    this.state = 'idle'
+    throw err
+  }
 
   // TODO: 之后可能要结合 disableRecordMeta 之类的来确认是否要创建文件。
-  const extraDataSavePath = replaceExtName(savePath, '.json')
-  // TODO: 这个 ensure 或许应该放在 createRecordExtraDataController 里实现？
-  ensureFolderExist(extraDataSavePath)
   const extraDataController = createRecordExtraDataController(extraDataSavePath)
-
   extraDataController.setMeta({ title })
 
   const client = createDYClient(Number(this.channelId), {
@@ -148,16 +154,18 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
     client.start()
   }
 
-  const recordSavePath = savePath
-  ensureFolderExist(recordSavePath)
-
+  let isEnded = false
   const onEnd = (...args: unknown[]) => {
+    if (isEnded) return
+    isEnded = true
     this.emit('DebugLog', {
       type: 'common',
-      text: `ffmpeg end, reason: ${JSON.stringify(args)}`,
+      text: `ffmpeg end, reason: ${JSON.stringify(args, (_, v) => (v instanceof Error ? v.stack : v))}`,
     })
-    this.recordHandle?.stop()
+    const reason = args[0] instanceof Error ? args[0].message : String(args[0])
+    this.recordHandle?.stop(reason)
   }
+
   const isInvalidStream = createInvalidStreamChecker()
   const timeoutChecker = createTimeoutChecker(() => onEnd('ffmpeg timeout'), 10e3)
   const command = createFFMPEGBuilder(stream.url)
@@ -168,7 +176,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
     .outputOptions(ffmpegOutputOptions)
     .output(recordSavePath)
     .on('error', onEnd)
-    .on('end', () => onEnd('end'))
+    .on('end', () => onEnd('finished'))
     .on('stderr', (stderrLine) => {
       assert(typeof stderrLine === 'string')
       this.emit('DebugLog', { type: 'ffmpeg', text: stderrLine })
@@ -187,7 +195,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
 
   // TODO: 需要一个机制防止空录制，比如检查文件的大小变化、ffmpeg 的输出、直播状态等
 
-  const stop = singleton<RecordHandle['stop']>(async () => {
+  const stop = singleton<RecordHandle['stop']>(async (reason?: string) => {
     if (!this.recordHandle) return
     this.state = 'stopping-record'
     // TODO: emit update event
@@ -212,7 +220,7 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
     // TODO: other codes
     // TODO: emit update event
 
-    this.emit('RecordStop', this.recordHandle)
+    this.emit('RecordStop', { recordHandle: this.recordHandle, reason })
     this.recordHandle = undefined
     this.state = 'idle'
   })
