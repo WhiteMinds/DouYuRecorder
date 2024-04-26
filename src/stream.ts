@@ -58,8 +58,6 @@ export async function getInfo(channelId: string): Promise<{
     if (isVideoLoop) {
       living = false
     }
-    console.log('isVideoLoop', isVideoLoop, new Date().toLocaleTimeString())
-    if (!isVideoLoop) fs.writeFileSync('test.html', res.data)
   }
 
   return {
