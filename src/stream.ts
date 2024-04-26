@@ -1,6 +1,7 @@
 import { Qualities, Recorder } from '@autorecord/manager'
 import { getLiveInfo, SourceProfile, StreamProfile } from './dy_api'
 import * as R from 'ramda'
+import fs from 'fs'
 import { getValuesFromArrayLikeFlexSpaceBetween } from './utils'
 import { requester } from './requester'
 
@@ -53,10 +54,12 @@ export async function getInfo(channelId: string): Promise<{
   let living = json.data.room_status === '1'
   if (living) {
     const res = await requester.get<string>(`https://www.douyu.com/${channelId}`)
-    const isVideoLoop = res.data.includes('"videoLoop":1,')
+    const isVideoLoop = res.data.includes('"videoLoop":1,') || res.data.includes('"videoLoop":1}')
     if (isVideoLoop) {
       living = false
     }
+    console.log('isVideoLoop', isVideoLoop, new Date().toLocaleTimeString())
+    if (!isVideoLoop) fs.writeFileSync('test.html', res.data)
   }
 
   return {
